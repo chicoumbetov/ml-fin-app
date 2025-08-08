@@ -10,3 +10,6 @@ Client created with Vite command:
 
 Install packages:
 ```pnpm i react-redux @reduxjs/toolkit react-router-dom @mui/material @emotion/react @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid```
+
+```pnpm install -D @types/react-dom```
+
