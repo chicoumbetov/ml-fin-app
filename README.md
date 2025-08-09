@@ -16,3 +16,8 @@ Install packages:
 ```pnpm i -D eslint eslint-config-react-app```
 
 ```pnpm i @mui/material @mui/system @types/node recharts```
+
+## Machine Learning
+
+``` pnpm i regression```
+``` pnpm i --save-dev @types/regression```
