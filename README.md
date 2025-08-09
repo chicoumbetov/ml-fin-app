@@ -20,6 +20,10 @@ Install packages:
 ### Server:
 ```npm init -y```
 
+```pnpm install body-parser cors dotenv express helmet mongoose mongoose-currency morgan```
+
+```pnpm install -D nodemon```
+
 ## Machine Learning
 
 ``` pnpm i regression```
