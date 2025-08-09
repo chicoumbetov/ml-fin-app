@@ -12,7 +12,7 @@ import type {
 const baseQuery = fetchBaseQuery({ baseUrl: import.meta.env.VITE_SERVER_URL });
 
 // Create a custom baseQuery wrapper that handles retries with a long initial delay.
-const retryWithWakeupDelay = async (args: any, api: any, extraOptions: any) => {
+const retryWithWakeupDelay = async (args: string, api: any, extraOptions: any) => {
   let retries = 0;
   const maxRetries = 5;
   let lastError;
@@ -28,12 +28,12 @@ const retryWithWakeupDelay = async (args: any, api: any, extraOptions: any) => {
 
     if (retries === 1) {
       console.warn("Server is not responding. Waiting for 2 minutes for it to wake up...");
-      toast.error("Server is not responding. Waiting for 2 minutes for it to wake up...");
+      toast.error(`${args} Server is not responding. Waiting for 2 minutes for it to wake up...`);
       await new Promise((resolve) => setTimeout(resolve, 120000));
     } else {
       const delay = Math.min(2000 * (2 ** (retries - 1)), 60000);
       console.warn(`Attempt ${retries} failed. Retrying in ${delay / 1000} seconds...`);
-      toast.error(`Attempt ${retries} failed. Retrying in ${delay / 1000} seconds...`);
+      toast.error(`${args} Attempt ${retries} failed. Retrying in ${delay / 1000} seconds...`);
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
