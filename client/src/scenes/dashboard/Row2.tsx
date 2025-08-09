@@ -3,7 +3,8 @@ import DashboardBox from "@/components/DashboardBox";
 import FlexBetween from "@/components/FlexBetween";
 import { useGetKpisQuery, useGetProductsQuery } from "@/state/api";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { toast } from "react-toastify";
 import {
   CartesianGrid,
   Cell,
@@ -28,8 +29,26 @@ const pieData = [
 const Row2 = () => {
   const { palette } = useTheme();
   const pieColors = [palette.primary[800], palette.primary[300]];
-  const { data: operationalData } = useGetKpisQuery();
-  const { data: productData } = useGetProductsQuery();
+
+  const {
+    data: operationalData,
+    isFetching: isFetchingKpis,
+    isError: isErrorKpis,
+  } = useGetKpisQuery();
+  const {
+    data: productData,
+    isFetching: isFetchingProducts,
+    isError: isErrorProducts,
+  } = useGetProductsQuery();
+
+  useEffect(() => {
+    if (isFetchingKpis && isErrorKpis) {
+      toast.warn("Server is waking up. This may take up to 2 minutes.");
+    }
+    if (isFetchingProducts && isErrorProducts) {
+      toast.warn("Server is waking up to fetch product data. Please wait.");
+    }
+  }, [isFetchingKpis, isErrorKpis, isFetchingProducts, isErrorProducts]);
 
   const operationalExpenses = useMemo(() => {
     return (

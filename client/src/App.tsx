@@ -8,8 +8,12 @@ import Dashboard from "./scenes/dashboard";
 import Navbar from "./scenes/navbar";
 import Predictions from "./scenes/predictions";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   const theme = useMemo(() => createTheme(themeSettings), []);
+
   return (
     <div className="app">
       <BrowserRouter>
@@ -24,6 +28,7 @@ function App() {
           </Box>
         </ThemeProvider>
       </BrowserRouter>
+      <ToastContainer />
     </div>
   );
 }

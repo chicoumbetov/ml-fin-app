@@ -8,16 +8,49 @@ import {
 } from "@/state/api";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid, type GridCellParams } from "@mui/x-data-grid";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { Cell, Pie, PieChart } from "recharts";
 
 const Row3 = () => {
   const { palette } = useTheme();
   const pieColors = [palette.primary[800], palette.primary[500]];
 
-  const { data: kpiData } = useGetKpisQuery();
-  const { data: productData } = useGetProductsQuery();
-  const { data: transactionData } = useGetTransactionsQuery();
+  const {
+    data: kpiData,
+    isFetching: isFetchingKpis,
+    isError: isErrorKpis,
+  } = useGetKpisQuery();
+  const {
+    data: productData,
+    isFetching: isFetchingProducts,
+    isError: isErrorProducts,
+  } = useGetProductsQuery();
+  const {
+    data: transactionData,
+    isFetching: isFetchingTransactions,
+    isError: isErrorTransactions,
+  } = useGetTransactionsQuery();
+
+  useEffect(() => {
+    if (isFetchingKpis && isErrorKpis) {
+      toast.warn("Data is currently unavailable. The server might be starting up. Please wait around 2 minutes.");
+    }
+    if (isFetchingProducts && isErrorProducts) {
+      toast.warn("The server is waking up to fetch product data.");
+    }
+    if (isFetchingTransactions && isErrorTransactions) {
+      toast.warn("The server is waking up to fetch transaction data.");
+    }
+  }, [
+    isFetchingKpis,
+    isErrorKpis,
+    isFetchingProducts,
+    isErrorProducts,
+    isFetchingTransactions,
+    isErrorTransactions,
+  ]);
 
   const pieChartData = useMemo(() => {
     if (kpiData) {
@@ -37,6 +70,7 @@ const Row3 = () => {
         }
       );
     }
+    return [];
   }, [kpiData]);
 
   const productColumns = [

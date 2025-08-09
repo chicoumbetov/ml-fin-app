@@ -3,7 +3,9 @@ import DashboardBox from "@/components/DashboardBox";
 
 import { useGetKpisQuery } from "@/state/api";
 import { useTheme } from "@mui/material";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Area,
   AreaChart,
@@ -21,7 +23,13 @@ import {
 
 const Row1 = () => {
   const { palette } = useTheme();
-  const { data } = useGetKpisQuery();
+  const { data, isError, isFetching } = useGetKpisQuery();
+
+  useEffect(() => {
+    if (isFetching && isError) {
+      toast.warn("Data is currently unavailable. The server might be starting up. Please wait around 2 minutes.");
+    }
+  }, [isFetching, isError]);
 
   const revenue = useMemo(() => {
     return (
