@@ -15,4 +15,4 @@ Install packages:
 
 ```pnpm i -D eslint eslint-config-react-app```
 
-```pnpm i @mui/material @mui/system @types/node```
+```pnpm i @mui/material @mui/system @types/node recharts```
