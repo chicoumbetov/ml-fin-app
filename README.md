@@ -13,3 +13,6 @@ Install packages:
 
 ```pnpm install -D @types/react-dom```
 
+```pnpm i -D eslint eslint-config-react-app```
+
+```pnpm i @mui/material @mui/system @types/node```
