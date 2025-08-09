@@ -5,7 +5,11 @@ import express from "express";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
+import kpiRoutes from "./src/kpi/routes/kpi.js";
+import productRoutes from "./src/product/routes/product.js";
+import transactionRoutes from "./src/transaction/routes/transaction.js";
 
+/* CONFIGURATIONS */
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -17,6 +21,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 /* ROUTES */
+app.use("/kpi", kpiRoutes);
+app.use("/product", productRoutes);
+app.use("/transaction", transactionRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
@@ -28,7 +35,9 @@ mongoose
   .then(async () => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
-    /* ADD DATA ONE TIME ONLY OR AS NEEDED */
+    /* ADD DATA ONE TIME ONLY OR AS NEEDED 
+    Use only for seeding data.js info in DB
+    */
     // await mongoose.connection.db.dropDatabase();
     // KPI.insertMany(kpis);
     // Product.insertMany(products);
