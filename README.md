@@ -18,7 +18,7 @@ Install packages:
 ```pnpm i @mui/material @mui/system @types/node recharts```
 
 ### Server:
-``` pnpm init -y```
+```npm init -y```
 
 ## Machine Learning
 
