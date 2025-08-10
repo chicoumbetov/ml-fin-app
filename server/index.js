@@ -5,6 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
+
 import kpiRoutes from "./src/kpi/routes/kpi.js";
 import productRoutes from "./src/product/routes/product.js";
 import transactionRoutes from "./src/transaction/routes/transaction.js";
@@ -39,8 +40,16 @@ mongoose
     Use only for seeding data.js info in DB
     */
     // await mongoose.connection.db.dropDatabase();
-    // KPI.insertMany(kpis);
-    // Product.insertMany(products);
-    // Transaction.insertMany(transactions);
+    /*
+    import { kpis, products, transactions } from "./src/data/data.js";
+    import KPI from "./src/kpi/models/KPI.js";
+    import Product from "./src/product/models/Product.js";
+    import Transaction from "./src/transaction/models/Transaction.js";
+    */
+    /*
+    KPI.insertMany(kpis);
+    Product.insertMany(products);
+    Transaction.insertMany(transactions);
+    */
   })
   .catch((error) => console.log(`${error} did not connect`));
