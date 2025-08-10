@@ -53,7 +53,7 @@ const Row2 = () => {
   const operationalExpenses = useMemo(() => {
     return (
       operationalData &&
-      operationalData[0].monthlyData.map(
+      operationalData[0]?.monthlyData?.map(
         ({ month, operationalExpenses, nonOperationalExpenses }) => {
           return {
             name: month.substring(0, 3),
@@ -68,7 +68,7 @@ const Row2 = () => {
   const productExpenseData = useMemo(() => {
     return (
       productData &&
-      productData.map(({ _id, price, expense }) => {
+      productData?.map(({ _id, price, expense }) => {
         return {
           id: _id,
           price: price,
