@@ -1,4 +1,4 @@
-import type { GetKpisResponse, GetKpisResponseStringMock } from "@/state/types";
+import type { GetKpisResponse, GetKpisResponseStringMock, GetProductsResponse, GetProductsResponseStringMock, GetTransactionsResponse, GetTransactionsResponseStringMock } from "@/state/types";
 
 export const formatMockKpis = (mockData: GetKpisResponseStringMock[]): GetKpisResponse[] => {
   return mockData.map((kpi) => {
@@ -36,6 +36,53 @@ export const formatMockKpis = (mockData: GetKpisResponseStringMock[]): GetKpisRe
         revenue: parseFloat(dayData.revenue),
         expenses: parseFloat(dayData.expenses),
       })),
+    };
+  });
+};
+
+export const formatMockProducts = (
+  mockData: GetProductsResponseStringMock[]
+): GetProductsResponse[] => {
+  return mockData.map((product) => {
+    // Helper to clean and parse currency strings
+    const parseCurrency = (value: string): number => {
+      // Remove '$' and any commas, then parse to float
+      return parseFloat(value.replace(/[^0-9.-]+/g, ""));
+    };
+
+    return {
+      id: product._id, // Assuming _id serves as id
+      _id: product._id,
+      __v: 0, // Mock data does not have __v, setting to 0 or adjust as needed
+      price: parseCurrency(product.price),
+      expense: parseCurrency(product.expense),
+      transactions: product.transactions,
+      createdAt: new Date().toISOString(), // Mock data does not have these, set defaults
+      updatedAt: new Date().toISOString(),
+    };
+  });
+};
+
+// New function to format mock transaction data
+export const formatMockTransactions = (
+  mockData: GetTransactionsResponseStringMock[]
+): GetTransactionsResponse[] => {
+  return mockData.map((transaction) => {
+    // Helper to clean and parse currency strings
+    const parseCurrency = (value: string): number => {
+      // Remove '$' and any commas, then parse to float
+      return parseFloat(value.replace(/[^0-9.-]+/g, ""));
+    };
+
+    return {
+      id: transaction._id, // Assuming _id serves as id
+      _id: transaction._id,
+      __v: 0, // Mock data does not have __v, setting to 0 or adjust as needed
+      buyer: transaction.buyer,
+      amount: parseCurrency(transaction.amount),
+      productIds: transaction.productIds,
+      createdAt: new Date().toISOString(), // Mock data does not have these, set defaults
+      updatedAt: new Date().toISOString(),
     };
   });
 };
