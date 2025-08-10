@@ -3,38 +3,37 @@ import type { GetKpisResponse, GetKpisResponseStringMock, GetProductsResponse, G
 export const formatMockKpis = (mockData: GetKpisResponseStringMock[]): GetKpisResponse[] => {
   return mockData.map((kpi) => {
     return {
-      // Properties that are already numbers or strings and don't need conversion
-      id: kpi.id || '', // Assuming 'id' can be optional in mock but required in real
+      id: kpi.id || `${Math.random()}`, // Assuming 'id' can be optional in mock but required in real
       _id: kpi._id,
       __v: kpi.__v || 0, // Assuming '__v' can be optional in mock but required in real
-      createdAt: kpi.createdAt || '',
-      updatedAt: kpi.updatedAt || '',
+      createdAt: kpi.createdAt || new Date().toISOString(),
+      updatedAt: kpi.updatedAt || new Date().toISOString(),
 
       // Convert string numbers to actual numbers
-      totalProfit: parseFloat(kpi.totalProfit),
-      totalRevenue: parseFloat(kpi.totalRevenue),
-      totalExpenses: parseFloat(kpi.totalExpenses),
+      totalProfit: parseFloat(kpi.totalProfit.replace("$", "")),
+      totalRevenue: parseFloat(kpi.totalRevenue.replace("$", "")),
+      totalExpenses: parseFloat(kpi.totalExpenses.replace("$", "")),
 
       expensesByCategory: {
-        salaries: parseFloat(kpi.expensesByCategory.salaries),
-        supplies: parseFloat(kpi.expensesByCategory.supplies),
-        services: parseFloat(kpi.expensesByCategory.services),
+        salaries: parseFloat(kpi.expensesByCategory.salaries.replace("$", "")),
+        supplies: parseFloat(kpi.expensesByCategory.supplies.replace("$", "")),
+        services: parseFloat(kpi.expensesByCategory.services.replace("$", "")),
       },
 
       monthlyData: kpi.monthlyData.map((monthData) => ({
-        id: monthData.id || `${monthData.month}-${Math.random()}`, // Generate id if missing, or use existing
+        id: monthData.id || `${monthData.month}-${Math.random()}`,
         month: monthData.month,
-        revenue: parseFloat(monthData.revenue),
-        expenses: parseFloat(monthData.expenses),
-        nonOperationalExpenses: parseFloat(monthData.nonOperationalExpenses),
-        operationalExpenses: parseFloat(monthData.operationalExpenses),
+        revenue: parseFloat(monthData.revenue.replace("$", "")),
+        expenses: parseFloat(monthData.expenses.replace("$", "")),
+        nonOperationalExpenses: parseFloat(monthData.nonOperationalExpenses.replace("$", "")),
+        operationalExpenses: parseFloat(monthData.operationalExpenses.replace("$", "")),
       })),
 
       dailyData: kpi.dailyData.map((dayData) => ({
-        id: dayData.id || `${dayData.date}-${Math.random()}`, // Generate id if missing, or use existing
+        id: dayData.id || `${dayData.date}-${Math.random()}`,
         date: dayData.date,
-        revenue: parseFloat(dayData.revenue),
-        expenses: parseFloat(dayData.expenses),
+        revenue: parseFloat(dayData.revenue.replace("$", "")),
+        expenses: parseFloat(dayData.expenses.replace("$", "")),
       })),
     };
   });
