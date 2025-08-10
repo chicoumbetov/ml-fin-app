@@ -3,7 +3,7 @@ import DashboardBox from "@/components/DashboardBox";
 import FlexBetween from "@/components/FlexBetween";
 import { useGetKpisQuery, useGetProductsQuery } from "@/state/api";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import {
   CartesianGrid,
@@ -21,6 +21,10 @@ import {
   ZAxis,
 } from "recharts";
 
+import { kpis, products as mockProducts } from "@/assets/data/data";
+import type { GetKpisResponse, GetProductsResponse } from "@/state/types";
+import { formatMockKpis, formatMockProducts } from "./utils";
+
 const pieData = [
   { name: "Group A", value: 600 },
   { name: "Group B", value: 400 },
@@ -36,24 +40,36 @@ const Row2 = () => {
     isError: isErrorKpis,
   } = useGetKpisQuery();
   const {
-    data: productData,
+    data: serverProductData,
     isFetching: isFetchingProducts,
     isError: isErrorProducts,
   } = useGetProductsQuery();
 
+  const [displayProductData, setDisplayProductData] = useState<GetProductsResponse[]>([]);
+  const [displayData, setDisplayData] = useState<GetKpisResponse[]>([]);
+
   useEffect(() => {
-    if (isFetchingKpis && isErrorKpis) {
+    // if (!isFetchingKpis && isErrorKpis) {
+    if (!isFetchingKpis && !isErrorKpis && operationalData) {
       toast.warn("Server is waking up. This may take up to 2 minutes.");
+      setDisplayData(operationalData);
     }
-    if (isFetchingProducts && isErrorProducts) {
-      toast.warn("Server is waking up to fetch product data. Please wait.");
-    }
-  }, [isFetchingKpis, isErrorKpis, isFetchingProducts, isErrorProducts]);
+    setDisplayData(formatMockKpis(kpis));
+  }, [operationalData, isFetchingKpis, isErrorKpis]);
+
+  useEffect(() => {
+    if (!isFetchingProducts && !isErrorProducts && serverProductData) {
+      setDisplayProductData(serverProductData);
+    } // else if (!isFetchingProducts && isErrorProducts || (serverProductData === null && !isFetchingProducts)) {
+    setDisplayProductData(formatMockProducts(mockProducts));
+    // }
+  }, [serverProductData, isErrorProducts, isFetchingProducts]);
 
   const operationalExpenses = useMemo(() => {
     return (
-      operationalData &&
-      operationalData[0]?.monthlyData?.map(
+      // operationalData &&
+      // operationalData[0]?.monthlyData?.map(
+      displayData && displayData[0]?.monthlyData?.map(
         ({ month, operationalExpenses, nonOperationalExpenses }) => {
           return {
             name: month.substring(0, 3),
@@ -63,12 +79,13 @@ const Row2 = () => {
         }
       )
     );
-  }, [operationalData]);
+  }, [displayData])
+  // }, [operationalData]);
 
   const productExpenseData = useMemo(() => {
     return (
-      productData &&
-      productData?.map(({ _id, price, expense }) => {
+      displayProductData &&
+      displayProductData?.map(({ _id, price, expense }) => {
         return {
           id: _id,
           price: price,
@@ -76,7 +93,7 @@ const Row2 = () => {
         };
       })
     );
-  }, [productData]);
+  }, [displayProductData]);
 
   return (
     <>

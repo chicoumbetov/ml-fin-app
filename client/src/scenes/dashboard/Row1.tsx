@@ -35,13 +35,13 @@ const Row1 = () => {
       setDisplayData(serverData);
     }
     // If fetching is complete and there's an error OR serverData is null/undefined, use mock data
-    else if (!isFetching && isError || (serverData === null && !isFetching)) {
-      setDisplayData(formatMockKpis(kpis));
-    }
+    // else if (!isFetching && isError || (serverData === null && !isFetching)) {
+    setDisplayData(formatMockKpis(kpis));
+    // }
     // Handle initial loading state where neither is available yet
-    else if (isFetching && !serverData) {
+    // else if (isFetching && !serverData) {
       // Optionally, set a loading state here if desired
-    }
+    // }
   }, [serverData, isError, isFetching]);
 
   const revenue = useMemo(() => {
