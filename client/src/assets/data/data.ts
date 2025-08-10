@@ -1,4 +1,6 @@
-export const kpis = [
+import type { GetKpisResponseStringMock } from "@/scenes/dashboard/utils";
+
+export const kpis: GetKpisResponseStringMock[] = [
   {
     _id: "63bf8239f03239e002001612",
     totalProfit: "$212000.00",
