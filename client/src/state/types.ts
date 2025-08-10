@@ -55,3 +55,54 @@ export interface GetTransactionsResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+// * MOCK DATA
+export interface ExpensesByCategoryStringMock {
+  salaries: string;
+  supplies: string;
+  services: string;
+}
+
+export interface MonthStringMock {
+  id?: string;
+  month: string;
+  revenue: string;
+  expenses: string;
+  nonOperationalExpenses: string;
+  operationalExpenses: string;
+}
+
+export interface DayStringMock {
+  id?: string;
+  date: string;
+  revenue: string;
+  expenses: string;
+}
+
+export interface GetKpisResponseStringMock {
+  id?: string;
+  _id: string;
+  __v?: number;
+  totalProfit: string;
+  totalRevenue: string;
+  totalExpenses: string;
+  expensesByCategory: ExpensesByCategoryStringMock;
+  monthlyData: Array<MonthStringMock>;
+  dailyData: Array<DayStringMock>;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface GetProductsResponseStringMock {
+  _id: string;
+  price: string;
+  expense: string;
+  transactions: Array<string>;
+}
+
+export interface GetTransactionsResponseStringMock {
+  _id: string;
+  amount: string;
+  buyer: string;
+  productIds: Array<string>;
+}

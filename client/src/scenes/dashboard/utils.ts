@@ -1,40 +1,4 @@
-import type { GetKpisResponse } from "@/state/types";
-
-export interface GetKpisResponseStringMock {
-  id?: string;
-  _id: string;
-  __v?: number;
-  totalProfit: string;
-  totalRevenue: string;
-  totalExpenses: string;
-  expensesByCategory: ExpensesByCategoryStringMock;
-  monthlyData: Array<MonthStringMock>;
-  dailyData: Array<DayStringMock>;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface ExpensesByCategoryStringMock {
-  salaries: string;
-  supplies: string;
-  services: string;
-}
-
-export interface MonthStringMock {
-  id?: string;
-  month: string;
-  revenue: string;
-  expenses: string;
-  nonOperationalExpenses: string;
-  operationalExpenses: string;
-}
-
-export interface DayStringMock {
-  id?: string;
-  date: string;
-  revenue: string;
-  expenses: string;
-}
+import type { GetKpisResponse, GetKpisResponseStringMock } from "@/state/types";
 
 export const formatMockKpis = (mockData: GetKpisResponseStringMock[]): GetKpisResponse[] => {
   return mockData.map((kpi) => {

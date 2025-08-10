@@ -1,4 +1,5 @@
-import type { GetKpisResponseStringMock } from "@/scenes/dashboard/utils";
+import type { GetKpisResponseStringMock, GetProductsResponseStringMock, GetTransactionsResponseStringMock } from "@/state/types";
+
 
 export const kpis: GetKpisResponseStringMock[] = [
   {
@@ -467,7 +468,7 @@ export const kpis: GetKpisResponseStringMock[] = [
   },
 ];
 
-export const products = [
+export const products: GetProductsResponseStringMock[] = [
   {
     _id: "63bf7ac9f03239e002001600",
     price: "$43.41",
@@ -1608,7 +1609,7 @@ export const products = [
   },
 ];
 
-export const transactions = [
+export const transactions: GetTransactionsResponseStringMock[] = [
   {
     _id: "63bf7ccef03239e002001606",
     amount: "$154.37",
