@@ -8,54 +8,84 @@ import {
 } from "@/state/api";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid, type GridCellParams } from "@mui/x-data-grid";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { Cell, Pie, PieChart } from "recharts";
+
+import { kpis as mockKpis, products as mockProducts, transactions as mockTransactions } from "@/assets/data/data";
+import type { GetKpisResponse, GetProductsResponse, GetTransactionsResponse } from "@/state/types";
+import { formatMockKpis, formatMockProducts, formatMockTransactions } from "./utils";
+
 
 const Row3 = () => {
   const { palette } = useTheme();
   const pieColors = [palette.primary[800], palette.primary[500]];
 
   const {
-    data: kpiData,
+    data: serverKpiData,
     isFetching: isFetchingKpis,
     isError: isErrorKpis,
   } = useGetKpisQuery();
   const {
-    data: productData,
+    data: serverProductData,
     isFetching: isFetchingProducts,
     isError: isErrorProducts,
   } = useGetProductsQuery();
   const {
-    data: transactionData,
+    data: serverTransactionData,
     isFetching: isFetchingTransactions,
     isError: isErrorTransactions,
   } = useGetTransactionsQuery();
 
+  // State to hold the displayed data, either from server or mock
+  const [displayKpiData, setDisplayKpiData] = useState<GetKpisResponse[]>([]);
+  const [displayProductData, setDisplayProductData] = useState<GetProductsResponse[]>([]);
+  const [displayTransactionData, setDisplayTransactionData] = useState<GetTransactionsResponse[]>([]);
+
   useEffect(() => {
-    if (isFetchingKpis && isErrorKpis) {
+    if (!isFetchingKpis && serverKpiData) {
+      setDisplayKpiData(serverKpiData);
+    } else if (!isFetchingKpis && isErrorKpis) {
       toast.warn("Data is currently unavailable. The server might be starting up. Please wait around 2 minutes.");
-    }
-    if (isFetchingProducts && isErrorProducts) {
+      setDisplayKpiData(formatMockKpis(mockKpis));
+    } // else if (!isFetchingKpis && !serverKpiData) {
+      setDisplayKpiData(formatMockKpis(mockKpis));
+    // }
+  }, [serverKpiData, isFetchingKpis, isErrorKpis]);
+
+  useEffect(() => {
+    if (!isFetchingProducts && serverProductData) {
+      setDisplayProductData(serverProductData);
+    } else if (!isFetchingProducts && isErrorProducts) {
       toast.warn("The server is waking up to fetch product data.");
-    }
-    if (isFetchingTransactions && isErrorTransactions) {
+      setDisplayProductData(formatMockProducts(mockProducts));
+    } // else if (!isFetchingProducts && !serverProductData) {
+      setDisplayProductData(formatMockProducts(mockProducts));
+    // }
+  }, [serverProductData, isFetchingProducts, isErrorProducts]);
+
+  useEffect(() => {
+    if (!isFetchingTransactions && serverTransactionData) {
+      setDisplayTransactionData(serverTransactionData);
+    } else if (!isFetchingTransactions && isErrorTransactions) {
       toast.warn("The server is waking up to fetch transaction data.");
-    }
-  }, [
-    isFetchingKpis,
-    isErrorKpis,
-    isFetchingProducts,
-    isErrorProducts,
-    isFetchingTransactions,
-    isErrorTransactions,
-  ]);
+      setDisplayTransactionData(formatMockTransactions(mockTransactions));
+    } // else if (!isFetchingTransactions && !serverTransactionData) {
+      setDisplayTransactionData(formatMockTransactions(mockTransactions));
+    // }
+  }, [serverTransactionData, isFetchingTransactions, isErrorTransactions]);
+
 
   const pieChartData = useMemo(() => {
+    /*
     if (kpiData) {
       const totalExpenses = kpiData[0]?.totalExpenses;
       return kpiData && Object.entries(kpiData[0]?.expensesByCategory)?.map(
+    */
+    if (displayKpiData.length > 0 && displayKpiData[0]) {
+      const totalExpenses = displayKpiData[0].totalExpenses;
+      return Object.entries(displayKpiData[0].expensesByCategory).map(
         ([key, value]) => {
           return [
             {
@@ -71,7 +101,8 @@ const Row3 = () => {
       );
     }
     return [];
-  }, [kpiData]);
+  }, [displayKpiData]);
+  // }, [kpiData]);
 
   const productColumns = [
     {
@@ -124,7 +155,7 @@ const Row3 = () => {
       <DashboardBox gridArea="g">
         <BoxHeader
           title="List of Products"
-          sideText={`${productData?.length} products`}
+          sideText={`${displayProductData?.length} products`}
         />
         <Box
           mt="0.5rem"
@@ -150,7 +181,7 @@ const Row3 = () => {
             columnHeaderHeight={25}
             rowHeight={35}
             hideFooter={true}
-            rows={productData || []}
+            rows={displayProductData || []}
             columns={productColumns}
           />
         </Box>
@@ -158,7 +189,7 @@ const Row3 = () => {
       <DashboardBox gridArea="h">
         <BoxHeader
           title="Recent Orders"
-          sideText={`${transactionData?.length} latest transactions`}
+          sideText={`${displayTransactionData?.length} latest transactions`}
         />
         <Box
           mt="1rem"
@@ -184,7 +215,7 @@ const Row3 = () => {
             columnHeaderHeight={25}
             rowHeight={35}
             hideFooter={true}
-            rows={transactionData || []}
+            rows={displayTransactionData || []}
             columns={transactionColumns}
           />
         </Box>

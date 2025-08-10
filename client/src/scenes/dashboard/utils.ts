@@ -62,7 +62,6 @@ export const formatMockProducts = (
   });
 };
 
-// New function to format mock transaction data
 export const formatMockTransactions = (
   mockData: GetTransactionsResponseStringMock[]
 ): GetTransactionsResponse[] => {
@@ -74,7 +73,7 @@ export const formatMockTransactions = (
     };
 
     return {
-      id: transaction._id, // Assuming _id serves as id
+      id: transaction._id || `${Math.random()}`, // Assuming _id serves as id
       _id: transaction._id,
       __v: 0, // Mock data does not have __v, setting to 0 or adjust as needed
       buyer: transaction.buyer,
