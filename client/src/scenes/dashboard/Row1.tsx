@@ -1,11 +1,12 @@
 import BoxHeader from "@/components/BoxHeader";
 import DashboardBox from "@/components/DashboardBox";
-
 import { useGetKpisQuery } from "@/state/api";
 import { useTheme } from "@mui/material";
-import { useEffect, useMemo } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useMemo, useState } from "react";
+
+import { kpis } from "@/assets/data/data";
+
+import type { GetKpisResponse } from "@/state/types";
 import {
   Area,
   AreaChart,
@@ -20,33 +21,45 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { formatMockKpis } from "./utils";
 
 const Row1 = () => {
   const { palette } = useTheme();
-  const { data, isError, isFetching } = useGetKpisQuery();
+  const { data: serverData, isError, isFetching } = useGetKpisQuery();
+
+  // State to hold the data, either from server or mock
+  const [displayData, setDisplayData] = useState<GetKpisResponse[]>([]);
 
   useEffect(() => {
-    if (isFetching && isError) {
-      toast.warn("Data is currently unavailable. The server might be starting up. Please wait around 2 minutes.");
+    if (!isFetching && !isError && serverData) {
+      setDisplayData(serverData);
     }
-  }, [isFetching, isError]);
+    // If fetching is complete and there's an error OR serverData is null/undefined, use mock data
+    else if (!isFetching && isError || (serverData === null && !isFetching)) {
+      setDisplayData(formatMockKpis(kpis));
+    }
+    // Handle initial loading state where neither is available yet
+    else if (isFetching && !serverData) {
+      // Optionally, set a loading state here if desired
+    }
+  }, [serverData, isError, isFetching]);
 
   const revenue = useMemo(() => {
     return (
-      data &&
-      data[0]?.monthlyData?.map(({ month, revenue }) => {
+      displayData &&
+      displayData[0]?.monthlyData?.map(({ month, revenue }) => {
         return {
           name: month.substring(0, 3),
           revenue: revenue,
         };
       })
     );
-  }, [data]);
+  }, [displayData]);
 
   const revenueExpenses = useMemo(() => {
     return (
-      data &&
-      data[0]?.monthlyData?.map(({ month, revenue, expenses }) => {
+      displayData &&
+      displayData[0]?.monthlyData?.map(({ month, revenue, expenses }) => {
         return {
           name: month.substring(0, 3),
           revenue: revenue,
@@ -54,12 +67,12 @@ const Row1 = () => {
         };
       })
     );
-  }, [data]);
+  }, [displayData]);
 
   const revenueProfit = useMemo(() => {
     return (
-      data &&
-      data[0]?.monthlyData?.map(({ month, revenue, expenses }) => {
+      displayData &&
+      displayData[0]?.monthlyData?.map(({ month, revenue, expenses }) => {
         return {
           name: month.substring(0, 3),
           revenue: revenue,
@@ -67,7 +80,7 @@ const Row1 = () => {
         };
       })
     );
-  }, [data]);
+  }, [displayData]);
 
   return (
     <>
